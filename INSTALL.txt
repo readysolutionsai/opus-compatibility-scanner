@@ -1,0 +1,64 @@
+Claude Opus 4.6 ⇄ 4.7 Compatibility Scanner
+============================================
+
+A long-lived hygiene tool for projects that actively use both Claude Opus
+4.6 and Opus 4.7. Scans CLAUDE.md, AGENTS.md, subagent definitions, skill
+SKILL.md files, settings.json, hook scripts, package manifests, and Anthropic
+SDK call sites for compatibility issues. The first thing the scanner does
+is introduce itself and ask you to pick a mode — no files are read until
+you choose.
+
+INSTALL
+-------
+
+Manual extraction (any Claude Code version):
+  Project-level (this repo only):
+    unzip opus-compatibility-scanner.zip -d .claude/skills/
+  Global (all your projects):
+    unzip opus-compatibility-scanner.zip -d ~/.claude/skills/
+
+The .skill file is the same archive with a different extension; either
+form extracts identically. (Some Claude clients also accept dragging the
+archive directly; manual extraction works in all environments.)
+
+Then start a new Claude Code session — the skill registers automatically.
+
+USAGE
+-----
+
+In Claude Code, type:
+  /opus-compatibility-scanner
+
+Or just ask Claude:
+  "scan my project for Opus 4.6 / 4.7 compatibility"
+  "check if my CLAUDE.md works on both Opus 4.6 and 4.7"
+  "my agent is acting weird since I switched to 4.7"
+
+You will be asked to pick one of three modes before the scan starts:
+
+  1. Compatibility scan — for projects running both 4.6 and 4.7. Holds
+     back 4.7-only optimizations that would degrade 4.6.
+  2. 4.7-only scan — for projects fully migrated off 4.6. Surfaces every
+     finding with no holdback.
+  3. Diagnose a behavior change — you switched to 4.7 and something
+     broke. Scans in compatibility mode, then surfaces symptom-mapped
+     findings first.
+
+OUTPUT
+------
+
+After the scan, you'll see an executive summary in plain markdown, then
+a per-finding drill-down. Reply yes / skip / explain for each finding.
+Nothing is edited until you accept a specific fix.
+
+No files are written by default. At the end of the scan you can opt in
+to saving a JSON manifest and / or a Markdown report under .claude/.
+Both default to no.
+
+Pattern catalog current through 2026-04-26.
+
+SOURCE & UPDATES
+----------------
+
+Built and maintained by Ready Solutions (readysolutions.ai).
+Latest version: https://readysolutions.ai/downloads/opus-compatibility-scanner.skill
