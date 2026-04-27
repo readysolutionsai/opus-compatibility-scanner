@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Opus Compatibility Scanner Manifest",
+  "description": "Output of Phase 4. file_hashes feed the inline drift check that runs immediately before any Edit during conversational fix application.",
+  "type": "object",
+  "required": ["scanner_version", "scanned_at", "files_scanned", "file_hashes", "findings", "apply_tier_counts", "severity_counts", "data_current_through"],
+  "properties": {
+    "scanner_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9.]+)?$" },
+    "data_current_through": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the pattern catalog was last reviewed against current Anthropic documentation."
+    },
+    "scanned_at": { "type": "string", "format": "date-time" },
+    "files_scanned": { "type": "integer", "minimum": 0 },
+    "file_hashes": {
+      "type": "object",
+      "patternProperties": { "^.+$": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" } }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "pattern_id", "pattern_name", "severity", "tier", "apply_tier", "file", "line", "matched_substring", "source_url", "template_version"],
+        "properties": {
+          "id": { "type": "string" },
+          "pattern_id": { "type": "string" },
+          "pattern_name": { "type": "string" },
+          "severity": { "type": "string", "enum": ["critical", "warning", "info"] },
+          "tier": { "type": "integer", "minimum": 1, "maximum": 4 },
+          "apply_tier": { "type": "string", "enum": ["direct", "guided", "manual"] },
+          "file": { "type": "string" },
+          "line": { "type": "integer", "minimum": 1 },
+          "matched_substring": { "type": "string" },
+          "source_url": { "type": "string", "format": "uri" },
+          "template_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+          "fidelity": { "type": "string", "enum": ["verbatim", "paraphrased", "practitioner"] },
+          "suppressed_by": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "apply_tier_counts": {
+      "type": "object",
+      "required": ["direct", "guided", "manual"],
+      "properties": {
+        "direct": { "type": "integer", "minimum": 0 },
+        "guided": { "type": "integer", "minimum": 0 },
+        "manual": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "severity_counts": {
+      "type": "object",
+      "required": ["critical", "warning", "info"],
+      "properties": {
+        "critical": { "type": "integer", "minimum": 0 },
+        "warning": { "type": "integer", "minimum": 0 },
+        "info": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}
